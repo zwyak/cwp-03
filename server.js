@@ -5,7 +5,7 @@ const port = 8124;
 const firstRequestStr = 'FILES';
 const successReq = 'ASC';
 const failedReq = 'DEC';
-
+const serverFiles = './server_files'
 
 let seed = 3106;
 
