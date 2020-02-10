@@ -1,5 +1,6 @@
 // client.js
 const net = require('net');
+const fs = require('fs');
 const port = 8124;
 
 const client = new net.Socket();
