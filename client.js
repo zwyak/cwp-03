@@ -18,14 +18,30 @@ client.setEncoding('utf8');
 
 client.connect(port, function() {
   console.log('Connected');
+  client.RequestNumber = 0;
   client.write(firstRequestStr);
 });
 
 client.on('data', function(data) {
-  console.log(data);
 
-  if (data == firstRequestStr){
-  }else{
+  client.RequestNumber = client.RequestNumber + 1;
+
+  if ( (data == successReq) && (client.RequestNumber == 1) ){
+    console.log(data);
+    for (var i = 0; i < args.length; i++) {
+      if (fs.existsSync(args[i])){
+        fs.readdir(args[i], function(err, list) {
+          for (var i = 0; i < list.length; i++) {
+            if ( fs.lstatSync(list[i]).isFile() ){
+              const buf = Buffer.from(list[i]);
+              client.write(buf);
+            }
+          }
+        });
+      }
+    }
+}else if ( (data != successReq) && (client.RequestNumber == 1) ){
+    console.log(data);
     client.destroy();
   }
 });
