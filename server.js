@@ -6,7 +6,8 @@ const port = 8124;
 const firstRequestStr = 'FILES';
 const successReq = 'ASC';
 const failedReq = 'DEC';
-const serverFiles = './server_files'
+const serverFiles = './server_files';
+const maxConnections = 10;
 
 let seed = 3106;
 
@@ -31,10 +32,10 @@ const server = net.createServer((client) => {
     }else{
       console.log(data);
 
-      fs.mkdir(`${client.ID}`, { recursive: true }, (err) => {
+      fs.mkdir(path.join(serverFiles,`${client.ID}`), { recursive: true }, (err) => {
           if (err) throw err;
 
-          fs.writeFile(path.join(serverFiles, `${client.ID}`, data), data, (err) => {
+          fs.writeFile(path.join(serverFiles,`${client.ID}`, `${Date.now()}.dat`), data, (err) => {
             if (err) throw err;
             console.log('The file has been saved!');
           });
@@ -44,6 +45,8 @@ const server = net.createServer((client) => {
 
   client.on('end', () => console.log('Client disconnected'));
 });
+
+server.maxConnections = maxConnections;
 
 server.listen(port, () => {
   console.log(`Server listening on localhost:${port}`);
